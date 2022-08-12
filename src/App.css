@@ -1,0 +1,11 @@
+/* Menu Item */
+.card-img {
+  opacity: 0.8;
+}
+
+.dish-name {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgb(5, 5, 5);
+  cursor: pointer;
+}
