@@ -3,8 +3,8 @@ import { Card, CardImg, CardImgOverlay, CardBody, CardTitle } from "reactstrap";
 
 const MenuItem = (props) => {
   return (
-    <div>
-      <Card className="mb-4" onClick={props.DishSelect}>
+    <div className="card-wrapper">
+      <Card className="card-item" onClick={props.DishSelect}>
         <CardBody>
           <CardImg
             className="card-img"
