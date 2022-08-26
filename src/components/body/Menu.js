@@ -3,7 +3,8 @@ import MenuItem from "./MenuItem";
 import DishDetail from "./DishDetail";
 import { connect } from "react-redux";
 import { Button, Modal, ModalBody, ModalFooter, CardColumns } from "reactstrap";
-import * as actionTypes from "../../redux/actionTypes";
+import { addComment, fetchDishes } from "../../redux/actionCreators";
+import Loading from "./Loading";
 
 const mapStateToProps = (state) => {
   return {
@@ -15,15 +16,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addComment: (dishId, rating, author, comment) =>
-      dispatch({
-        type: actionTypes.ADD_COMMENT,
-        payload: {
-          dishId: dishId,
-          author: author,
-          rating: rating,
-          comment: comment,
-        },
-      }),
+      dispatch(addComment(dishId, rating, author, comment)),
+    fetchDishes: () => dispatch(fetchDishes()),
   };
 };
 
@@ -44,43 +38,51 @@ class Menu extends Component {
     });
   };
 
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
+
   render() {
-    const menu = this.props.dishes.map((item) => (
-      <MenuItem
-        dish={item}
-        key={item.id}
-        DishSelect={() => this.onDishSelect(item)}
-      />
-    ));
-    let dishDetail = null;
-    if (this.state.selectedDish != null) {
-      const comments = this.props.comments.filter(
-        (comment) => comment.dishId === this.state.selectedDish.id
-      );
-      dishDetail = (
-        <DishDetail
-          selectedDish={this.state.selectedDish}
-          comments={comments}
-          addComment={this.props.addComment}
+    if (this.props.dishes.isLoading) {
+      return <Loading />;
+    } else {
+      const menu = this.props.dishes.dishes.map((item) => (
+        <MenuItem
+          dish={item}
+          key={item.id}
+          DishSelect={() => this.onDishSelect(item)}
         />
+      ));
+      let dishDetail = null;
+      if (this.state.selectedDish != null) {
+        const comments = this.props.comments.filter(
+          (comment) => comment.dishId === this.state.selectedDish.id
+        );
+        dishDetail = (
+          <DishDetail
+            selectedDish={this.state.selectedDish}
+            comments={comments}
+            addComment={this.props.addComment}
+          />
+        );
+      }
+      document.title = "Menu";
+      return (
+        <div className="container">
+          <div className="row">
+            <CardColumns>{menu}</CardColumns>
+            <Modal isOpen={this.state.modalOpen}>
+              <ModalBody>{dishDetail}</ModalBody>
+              <ModalFooter>
+                <Button color="secondary" onClick={this.toggleModal}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
+        </div>
       );
     }
-    document.title = "Menu";
-    return (
-      <div className="container">
-        <div className="row">
-          <CardColumns>{menu}</CardColumns>
-          <Modal isOpen={this.state.modalOpen}>
-            <ModalBody>{dishDetail}</ModalBody>
-            <ModalFooter>
-              <Button color="secondary" onClick={this.toggleModal}>
-                Close
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
-      </div>
-    );
   }
 }
 
