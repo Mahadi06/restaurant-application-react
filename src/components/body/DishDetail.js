@@ -2,12 +2,16 @@ import React from "react";
 import { Card, CardImg, CardBody, CardTitle, CardText } from "reactstrap";
 import LoadComments from "./LoadComments";
 import CommentForm from "./CommentForm";
+import { baseUrl } from "../../redux/baseUrl";
 
 const DishDetail = (props) => {
   return (
     <div>
       <Card>
-        <CardImg className="p-3 rounded" src={props.selectedDish.image} />
+        <CardImg
+          className="p-3 rounded"
+          src={baseUrl + props.selectedDish.image}
+        />
         <CardBody>
           <CardTitle className="fs-4">{props.selectedDish.name}</CardTitle>
           <CardText>{props.selectedDish.description}</CardText>
@@ -16,7 +20,10 @@ const DishDetail = (props) => {
       </Card>
       <hr />
       <div className="mt-2">
-        <LoadComments comments={props.comments} />
+        <LoadComments
+          comments={props.comments}
+          commentsIsLoading={props.commentsIsLoading}
+        />
       </div>
       <hr />
       <CommentForm

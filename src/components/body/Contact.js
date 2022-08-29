@@ -1,5 +1,6 @@
 import React, { Component, createRef } from "react";
 import { Form, FormGroup, Label } from "reactstrap";
+import axios from "axios";
 
 class Contact extends Component {
   constructor(props) {
@@ -14,12 +15,27 @@ class Contact extends Component {
   }
 
   handleSubmit = (event) => {
-    console.log(this.fullName.current.value);
-    console.log(this.email.current.value);
-    console.log(this.phone.current.value);
-    console.log(this.message.current.value);
-    console.log(this.contactPref.current.value);
-    console.log(this.accept.current.checked);
+    // console.log(this.fullName.current.value);
+    //console.log(this.accept.current.checked);
+    let feedback = {
+      fullName: this.fullName.current.value,
+      email: this.email.current.value,
+      phone: this.phone.current.value,
+      message: this.message.current.value,
+      contactPref: this.contactPref.current.value,
+      accept: this.accept.current.checked,
+    };
+    // console.log(feedback);
+
+    axios
+      .post("http://localhost:5000/feedback", feedback)
+      .then((res) => res.status)
+      .then((status) => {
+        if (status == 201) {
+          console.log("submitted successfully");
+        }
+      });
+
     event.preventDefault();
   };
 

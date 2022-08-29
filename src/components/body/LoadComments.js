@@ -1,5 +1,6 @@
 import React from "react";
 import dateFormate, { masks } from "dateformate";
+import Loading from "./Loading";
 
 const LoadComments = (props) => {
   return props.comments.map((comment) => {
